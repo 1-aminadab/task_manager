@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // src/handlers/login.ts
 import { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
@@ -21,8 +22,7 @@ const loginWrapper: RequestHandler = async (req, res) => {
     if (bcrypt.compareSync(password, user.password)) {
       const token = jwt.sign(
         {
-          email: user.email,
-          userId: user.id
+          email: user.email
         },
         process.env.SECRET as string,
         {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable consistent-return */
 // src/handlers/register.ts
 import { RequestHandler } from 'express';
@@ -25,7 +26,7 @@ const registerWrapper: RequestHandler = async (req, res) => {
       [email]
     );
 
-    if (existingUserResult.length > 0) {
+    if (existingUserResult.rows.length > 0) {
       return res.status(400).json({
         message: 'User with this email already exists'
       });
@@ -40,7 +41,7 @@ const registerWrapper: RequestHandler = async (req, res) => {
       [email, hashedPassword, firstName, lastName, new Date(), new Date()]
     );
 
-    const user = result[0];
+    const user = result.rows[0];
 
     res.status(201).json(user);
   } catch (error) {

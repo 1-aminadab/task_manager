@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import apiSpec from '../swagger-doc.json';
-import * as authController from '../controllers/authController';
 
 import * as UserController from './controllers/user';
-import * as AuthController from './controllers/auth';
+import AuthController from './controllers/auth.controller';
+import { authenticateJWT } from './middleware/auth-middleware';
+import { TaskController } from './controllers/task.controller';
 
 export const router = Router();
 
@@ -12,13 +13,25 @@ export const router = Router();
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
 
-// auth routes 
-router.post('/login', requestHandlerWrapper(authController.login, { skipJwtAuth: true }));
-router.post('/logout', requestHandlerWrapper(authController.logout));
-router.post('/refresh-token', requestHandlerWrapper(authController.refreshToken));
+// auth routes
+router.post('/login', AuthController.login);
+router.post('/refresh-token', AuthController.refreshToken);
+router.post('/logout', AuthController.logout);
 // User routes
 router.get('/user/all', UserController.all);
 
+const taskController = new TaskController();
+
+router.use(authenticateJWT);
+
+router.get('/tasks', taskController.getAllTasksByUser.bind(taskController));
+router.get('/tasks/:id', taskController.getTaskById.bind(taskController));
+router.post('/tasks', taskController.createTask.bind(taskController));
+router.put('/tasks/:id', taskController.updateTask.bind(taskController));
+router.delete('/tasks/:id', taskController.deleteTask.bind(taskController));
+router.patch('/tasks/:id/complete', taskController.markTaskComplete.bind(taskController));
+
+// swagger docs
 if (process.env.NODE_ENV === 'development') {
   router.use('/dev/api-docs', swaggerUi.serve);
   router.get('/dev/api-docs', swaggerUi.setup(apiSpec));

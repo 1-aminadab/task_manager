@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 import { logger } from './logger';
 
 dotenv.config();
-console.log('====================================');
-console.log(process.env.DATABASE_URL);
-console.log('====================================');
 class PostgresConnection {
   private pool: Pool;
 
