@@ -48,7 +48,7 @@ To edit environment variables, create a file with name `.env` and copy the conte
 |---|---|---|---|
 | NODE_ENV  | string  | `development` |API runtime environment. eg: `production`  |
 |  PORT | number  | `3000` | Port to run the API server on |
-|  MONGO_URL | string  | `mongodb://localhost:27017/library` | URL for MongoDB |
+|  POSTGRES_URL | string  |  URL for Postgress |
 |  SECRET | string  | `iAmSuperBoy` | JWT Token's Secret Key |
 
 ## Logging
@@ -59,5 +59,4 @@ The application uses [winston](https://github.com/winstonjs/winston) as the defa
 
 
 ## License
-Copyright (c) kvvignesh. All rights reserved.
-Licensed under the [MIT](LICENSE) License.
+no licence yet
