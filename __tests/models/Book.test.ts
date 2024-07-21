@@ -3,7 +3,7 @@ import mockingoose from 'mockingoose';
 import { app } from '../../src/app';
 import { Book } from '../../src/models/Book';
 
-describe('test mongoose User model', () => {
+describe('test postgresql User model', () => {
   test('should return the doc with findById', () => {
     const returnValue = {
       _id: '507f191e810c19729de860ea',

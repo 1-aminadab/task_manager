@@ -1,13 +1,13 @@
-# Node-TypeScript-Express-MongoDB Boilerplate
-This repo can be used as a starting point for backend development with Nodejs, Express, TypeScript and MongoDB.
+# Task Management Boilerplate
+This repo can be used as a starting point for backend development with Nodejs, Express, TypeScript and Posggress.
 
 A few things to note in the project:
 * **TypeScript** - It uses TypeScript.
 * **JWT** - It uses JWT Token for Authentication.
-* **Mongo Connection Helper** - A helper class to connect to MongoDB reliably.
+* **POsgress Connection Helper** - A helper class to connect to Posggress reliably.
 * **Joi** - For declarative payload validation
 * **Middleware for easier async/await** - Catches errors from routes and throws them to express error handler to prevent app crash due to uncaught errors.
-* **.env file for configuration** - Change server config like app port, mongo url etc
+* **.env file for configuration** - Change server config like app port, postgress url etc
 * **Winston Logger** - Uses winston as the logger for the application.
 * **ESLINT** - ESLINT is configured for linting.
 * **Jest** - Using Jest for running test cases
@@ -20,7 +20,7 @@ A few things to note in the project:
 #### 1. Clone this repo
 
 ```
-$ git clone https://github.com/kvvignesh/Node-TypeScript-Express-MongoDB.git your-app-name
+$ git clone https://github.com/kvvignesh/Node-TypeScript-Express-Posggress.git your-app-name
 $ cd your-app-name
 ```
 
@@ -38,7 +38,7 @@ $ npm run dev
 ```
 Running the above commands results in 
 * 🌏**API Server** running at `http://localhost:3000`
-* 🛢️**MongoDB** running at `mongodb://localhost:27017`
+* 🛢️**Postgress** running at `gres://localhost:27017`
 
 
 ## Environment
