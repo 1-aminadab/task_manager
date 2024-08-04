@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // src/controllers/taskController.ts
 import { Request, Response } from 'express';
 import { TaskService } from '../services/task.service';
@@ -29,17 +30,25 @@ export class TaskController {
       res.status(400).json({ message: 'User ID not found in token' });
       return;
     }
-    const { title, description } = req.body;
+    const {
+      title, description, end_at, time, priority, category
+    } = req.body;
+
     const task: Task = {
-      id: 0, // This will be ignored as it's auto-incremented by the database
+      id: 0,
       userId,
       title,
       description,
-      isComplete: false,
+      end_at,
+      time,
+      priority,
+      category,
+      is_complete: false,
       createdAt: new Date(),
       updatedAt: new Date()
     };
     const newTask = await taskService.createTask(task);
+    console.log('newTask', newTask);
     res.json(newTask);
   }
 
@@ -50,13 +59,20 @@ export class TaskController {
       res.status(400).json({ message: 'User ID not found in token' });
       return;
     }
-    const { title, description, isComplete } = req.body;
+    const {
+      title, description, end_at, time, priority, category, is_complete
+    } = req.body;
+
     const task: Task = {
       id: Number(id),
       userId,
       title,
       description,
-      isComplete,
+      end_at,
+      time,
+      priority,
+      category,
+      is_complete,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -73,7 +89,10 @@ export class TaskController {
   async markTaskComplete(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const { isComplete } = req.body;
-    const updatedTask = await taskService.markTaskComplete(Number(id), isComplete);
+    const updatedTask = await taskService.markTaskComplete(
+      Number(id),
+      isComplete
+    );
     res.json(updatedTask);
   }
 }

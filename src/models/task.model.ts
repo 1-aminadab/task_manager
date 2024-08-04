@@ -3,7 +3,9 @@ import { Task } from '../types/task.type';
 
 export class TaskModel {
   async getAllTasksByUser(userId: number): Promise<Task[]> {
-    const result = await pool.query('SELECT * FROM tasks WHERE user_id = $1', [userId]);
+    const result = await pool.query('SELECT * FROM tasks WHERE user_id = $1', [
+      userId
+    ]);
     return result.rows;
   }
 
@@ -14,18 +16,47 @@ export class TaskModel {
 
   async createTask(task: Task): Promise<Task> {
     const result = await pool.query(
-      'INSERT INTO tasks (user_id, title, description, is_complete, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [task.userId, task.title, task.description, task.isComplete, new Date(), new Date()]
+      `INSERT INTO tasks 
+       (user_id, title, description, end_at, time, priority, category, created_at, updated_at) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [
+        task.userId,
+        task.title,
+        task.description,
+        task.end_at,
+        task.time,
+        task.priority,
+        task.category,
+        new Date(),
+        new Date()
+      ]
     );
-    return result.rows[0];
+    return result[0];
   }
 
   async updateTask(task: Task): Promise<Task> {
     const result = await pool.query(
-      'UPDATE tasks SET title = $1, description = $2, is_complete = $3, updated_at = $4 WHERE id = $5 RETURNING *',
-      [task.title, task.description, task.isComplete, new Date(), task.id]
+      `UPDATE tasks SET 
+       title = $1, 
+       description = $2, 
+       end_at = $3, 
+       time = $4, 
+       priority = $5, 
+       category = $6, 
+       updated_at = $7 
+       WHERE id = $8 RETURNING *`,
+      [
+        task.title,
+        task.description,
+        task.end_at,
+        task.time,
+        task.priority,
+        task.category,
+        new Date(),
+        task.id
+      ]
     );
-    return result.rows[0];
+    return result[0];
   }
 
   async deleteTask(id: number): Promise<void> {
@@ -34,9 +65,9 @@ export class TaskModel {
 
   async markTaskComplete(id: number, isComplete: boolean): Promise<Task> {
     const result = await pool.query(
-      'UPDATE tasks SET is_complete = $1, updated_at = $2 WHERE id = $3 RETURNING *',
+      "UPDATE tasks SET is_complete = $1, updated_at = $2 WHERE id = $3 RETURNING *",
       [isComplete, new Date(), id]
     );
-    return result.rows[0];
+    return result;
   }
 }

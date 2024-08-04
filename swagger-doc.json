@@ -1,378 +1,465 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "API Service",
-      "version": "1.0.0",
-      "description": "API Service endpoints",
-      "contact": {
-        "email": "vigneshkundhanam@gmail.com",
-        "name": "K V Vignesh"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Task Management API",
+    "version": "1.0.0",
+    "description": "API documentation for Task Management"
+  },
+  "components": {
+    "schemas": {
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "userId": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Task Title"
+          },
+          "description": {
+            "type": "string",
+            "example": "Task Description"
+          },
+          "end_at": {
+            "type": "string",
+            "example": "2023-12-31T23:59:59Z"
+          },
+          "time": {
+            "type": "string",
+            "example": "14:00"
+          },
+          "priority": {
+            "type": "string",
+            "example": "High"
+          },
+          "category": {
+            "type": "string",
+            "example": "Work"
+          },
+          "isComplete": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-01-01T00:00:00Z"
+          }
+        }
+      },
+      "TaskCreate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Task Title"
+          },
+          "description": {
+            "type": "string",
+            "example": "Task Description"
+          },
+          "end_at": {
+            "type": "string",
+            "example": "2023-12-31T23:59:59Z"
+          },
+          "time": {
+            "type": "string",
+            "example": "14:00"
+          },
+          "priority": {
+            "type": "string",
+            "example": "High"
+          },
+          "category": {
+            "type": "string",
+            "example": "Work"
+          }
+        }
+      },
+      "TaskUpdate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Updated Task Title"
+          },
+          "description": {
+            "type": "string",
+            "example": "Updated Task Description"
+          },
+          "end_at": {
+            "type": "string",
+            "example": "2023-12-31T23:59:59Z"
+          },
+          "time": {
+            "type": "string",
+            "example": "14:00"
+          },
+          "priority": {
+            "type": "string",
+            "example": "High"
+          },
+          "category": {
+            "type": "string",
+            "example": "Work"
+          },
+          "isComplete": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "TaskComplete": {
+        "type": "object",
+        "properties": {
+          "isComplete": {
+            "type": "boolean",
+            "example": true
+          }
+        }
       }
     },
-    "servers": [
-      {
-        "url": "http://localhost:3000/api/"
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
-    ],
-    "tags": [
-      {
-        "name": "Auth Controller",
-        "description": "Auth APIs"
-      },
-      {
-        "name": "Book Controller",
-        "description": "Books APIs"
-      },
-      {
-        "name": "User Controller",
-        "description": "User APIs"
-      }
-    ],
-    "paths": {
-      "/login": {
-        "post": {
-          "tags": [
-            "Auth Controller"
-          ],
-          "summary": "To get the JWT Token",
-          "operationId": "login",
-          "requestBody": {
-            "description": "Login Details",
-            "required": true,
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Tasks",
+      "description": "Task management"
+    }
+  ],
+  "paths": {
+    "/api/tasks": {
+      "get": {
+        "summary": "Retrieve all tasks for a user",
+        "tags": ["Tasks"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of tasks",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DraftLoginSchema"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Login Successful",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/DraftTokenSchema"
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Server error"
-            }
-          }
-        }
-      },
-      "/register": {
-        "post": {
-          "tags": [
-            "Auth Controller"
-          ],
-          "summary": "Register user",
-          "operationId": "user-add",
-          "requestBody": {
-            "description": "New user",
-            "required": true,
+          "400": {
+            "description": "User ID not found in token",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DraftUserSchema"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "User added",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UserSchema"
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Server error"
-            }
-          }
-        }
-      },
-      "/book/add": {
-        "post": {
-          "tags": [
-            "Book Controller"
-          ],
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "summary": "Add a book to the database",
-          "operationId": "book-add",
-          "requestBody": {
-            "description": "New book",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DraftBookSchema"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Book was added",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/DraftBookSchema"
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Server error"
-            }
-          }
-        }
-      },
-      "/book/all": {
-        "get": {
-          "tags": [
-            "Book Controller"
-          ],
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "summary": "Get all books in database",
-          "operationId": "book-get-all",
-          "responses": {
-            "200": {
-              "description": "Search results",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "properties": {
-                      "books": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/BookSchema"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User ID not found in token"
                     }
                   }
                 }
               }
-            },
-            "500": {
-              "description": "Server error"
             }
           }
         }
       },
-      "/book/search": {
-        "get": {
-          "tags": [
-            "Book Controller"
-          ],
-          "security": [
-            {
-              "bearerAuth": []
-            }
-          ],
-          "summary": "Search books by name or author",
-          "operationId": "book-search",
-          "parameters": [
-            {
-              "in": "query",
-              "name": "name",
+      "post": {
+        "summary": "Create a new task",
+        "tags": ["Tasks"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "string",
-                "default": "hitchhiker"
-              },
-              "description": "String containing full name or partial name of the book"
-            },
-            {
-              "in": "query",
-              "name": "author",
-              "schema": {
-                "type": "string",
-                "default": "douglas"
-              },
-              "description": "String containing full name or partial name of the author"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Search results",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "properties": {
-                      "books": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/BookSchema"
-                        }
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/components/schemas/TaskCreate"
               }
-            },
-            "500": {
-              "description": "Server error"
             }
           }
-        }
-      },
-      "/user/all": {
-        "get": {
-          "tags": [
-            "User Controller"
-          ],
-          "security": [
-            {
-              "bearerAuth": []
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
             }
-          ],
-          "summary": "Get all users in database",
-          "operationId": "user-get-all",
-          "responses": {
-            "200": {
-              "description": "Search results",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "properties": {
-                      "books": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/UserSchema"
-                        }
-                      }
+          },
+          "400": {
+            "description": "User ID not found in token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User ID not found in token"
                     }
                   }
                 }
               }
-            },
-            "500": {
-              "description": "Server error"
             }
           }
         }
       }
     },
-    "components": {
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+    "/api/tasks/{id}": {
+      "get": {
+        "summary": "Retrieve a task by ID",
+        "tags": ["Tasks"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the task to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          }
         }
       },
-      "schemas": {
-        "DraftLoginSchema": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "example": "vigneshkundhanam@gmail.com"
+      "put": {
+        "summary": "Update a task by ID",
+        "tags": ["Tasks"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             },
-            "password": {
-              "type": "string",
-              "example": "*****"
+            "description": "The ID of the task to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdate"
+              }
             }
           }
         },
-        "DraftTokenSchema": {
-          "type": "object",
-          "properties": {
-            "token": {
-              "type": "string",
-              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IksgViBWaWduZXNoIiwiaWF0IjoxNTE2MjM5MDIyfQ.jojFHaz65uekOjgkmVbcOIazOoWQSubROkxJmJwIWBE"
+        "responses": {
+          "200": {
+            "description": "The updated task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a task by ID",
+        "tags": ["Tasks"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             },
-            "_id": {
-              "type": "string",
-              "example": "5d7224d3b40b1a1a046697dd"
+            "description": "The ID of the task to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Task deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/complete": {
+      "patch": {
+        "summary": "Mark a task as complete",
+        "tags": ["Tasks"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the task to mark as complete"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskComplete"
+              }
             }
           }
         },
-        "DraftBookSchema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "example": "The Super Boy's Guide to the developer"
-            },
-            "author": {
-              "type": "string",
-              "example": "K V Vignesh"
+        "responses": {
+          "200": {
+            "description": "The updated task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "summary": "Login a user",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  }
+                }
+              }
             }
           }
         },
-        "BookSchema": {
-          "allOf": [
-            {
-              "$ref": "#/components/schemas/DraftBookSchema"
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "dGhpc2lzYXJlZnJlc2h0b2tlbg=="
+                    }
+                  }
+                }
+              }
             }
-          ],
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "example": "5d7224d3b40b1a1a046697dd"
-            }
-          }
-        },
-        "DraftUserSchema": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "example": "vigneshkundhanam@gmail.com"
-            },
-            "password": {
-              "type": "string",
-              "example": "*****"
-            },
-            "firstName": {
-              "type": "string",
-              "example": "K V"
-            },
-            "lastName": {
-              "type": "string",
-              "example": "Vignesh"
-            }
-          }
-        },
-        "UserSchema": {
-          "allOf": [
-            {
-              "$ref": "#/components/schemas/DraftUserSchema"
-            }
-          ],
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "example": "5d7224d3b40b1a1a046697dd"
-            },
-            "createdOn": {
-              "type": "string",
-              "example": "2020-07-05T13:39:56.665+00:00"
-            },
-            "updatedOn": {
-              "type": "string",
-              "example": "2020-07-05T13:39:56.665+00:00"
+          },
+          "400": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid email or password"
+                    }
+                  }
+                }
+              }
             }
           }
         }
       }
     }
   }
+}
