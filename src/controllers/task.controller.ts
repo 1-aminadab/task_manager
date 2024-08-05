@@ -8,14 +8,14 @@ import { CustomRequest } from '../middleware/auth-middleware';
 const taskService = new TaskService();
 
 export class TaskController {
-  async getAllTasksByUser(req: CustomRequest, res: Response): Promise<void> {
+  async getAllTasksByUser(req: CustomRequest, res: Response): Promise<any> {
     const userId = req.user?.id;
     if (!userId) {
       res.status(400).json({ message: 'User ID not found in token' });
       return;
     }
     const tasks = await taskService.getAllTasksByUser(userId);
-    res.json(tasks);
+    return res.json(tasks);
   }
 
   async getTaskById(req: CustomRequest, res: Response): Promise<void> {

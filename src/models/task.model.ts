@@ -6,7 +6,7 @@ export class TaskModel {
     const result = await pool.query('SELECT * FROM tasks WHERE user_id = $1', [
       userId
     ]);
-    return result.rows;
+    return result;
   }
 
   async getTaskById(id: number): Promise<Task> {
@@ -65,7 +65,7 @@ export class TaskModel {
 
   async markTaskComplete(id: number, isComplete: boolean): Promise<Task> {
     const result = await pool.query(
-      "UPDATE tasks SET is_complete = $1, updated_at = $2 WHERE id = $3 RETURNING *",
+      'UPDATE tasks SET is_complete = $1, updated_at = $2 WHERE id = $3 RETURNING *',
       [isComplete, new Date(), id]
     );
     return result;
